@@ -44,6 +44,10 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         }
     };
 
+    static {
+        System.loadLibrary("MyLibs");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         javaCameraView.setCvCameraViewListener(this);
 
         Dexter.withActivity(this)
-                .withPermissions(Manifest.permission.CAMERA)
+                .withPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -110,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
+
+        OpencvClass.faceDetection(mRgba.getNativeObjAddr());
 
         return mRgba;
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.nongmah.facedetectionopencv.lib.PortraitCameraBridgeViewBase;
 
@@ -44,6 +45,8 @@ public class Main2Activity extends AppCompatActivity implements PortraitCameraBr
     private float                  mRelativeFaceSize   = 0.2f;
     private int                    mAbsoluteFaceSize   = 0;
 
+    private int mCameraId = PortraitCameraBridgeViewBase.CAMERA_ID_BACK;
+
     private final String _TAG = "ProcessedCameraActivity:";
 
     private PortraitCameraBridgeViewBase mOpenCvCameraView;
@@ -61,6 +64,14 @@ public class Main2Activity extends AppCompatActivity implements PortraitCameraBr
 
         mOpenCvCameraView = (PortraitCameraBridgeViewBase) findViewById(R.id.cameraView);
         mOpenCvCameraView.setCvCameraViewListener(this);
+        mOpenCvCameraView.setCameraIndex(mCameraId);
+
+        findViewById(R.id.btnSwapCamera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapCamera();
+            }
+        });
     }
 
     @Override
@@ -214,5 +225,16 @@ public class Main2Activity extends AppCompatActivity implements PortraitCameraBr
 //        mGray = inputFrame.gray();
 
         return mRgba;
+    }
+
+    private void swapCamera() {
+        mOpenCvCameraView.disableView();
+        if (mCameraId == PortraitCameraBridgeViewBase.CAMERA_ID_BACK) {
+            mCameraId = PortraitCameraBridgeViewBase.CAMERA_ID_FRONT;
+        } else {
+            mCameraId = PortraitCameraBridgeViewBase.CAMERA_ID_BACK;
+        }
+        mOpenCvCameraView.setCameraIndex(mCameraId);
+        mOpenCvCameraView.enableView();
     }
 }
